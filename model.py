@@ -273,11 +273,30 @@ def cross_entropy_loss(logits, targets):
     loss = float(-np.mean(np.log(target_probs)) + 0.0)
     return loss, probs
 
-# Step 28 - cross_entropy_softmax_backward (not yet solved)
-# TODO: implement
+# Step 28 - cross_entropy_softmax_backward
+import numpy as np
 
-# Step 29 - linear_backward (not yet solved)
-# TODO: implement
+def cross_entropy_softmax_backward(probs, targets):
+    B, T, V = probs.shape
+    grad = probs.copy()
+    b_idx = np.arange(B)[:, None]
+    t_idx = np.arange(T)[None, :]
+    grad[b_idx, t_idx, targets] -= 1.0
+    grad /= (B * T)
+    return grad
+
+# Step 29 - linear_backward
+import numpy as np
+
+def linear_backward(grad_y, x, W):
+    in_dim = x.shape[-1]
+    out_dim = grad_y.shape[-1]
+    x_flat = x.reshape(-1, in_dim)
+    g_flat = grad_y.reshape(-1, out_dim)
+    grad_W = x_flat.T @ g_flat
+    grad_b = g_flat.sum(axis=0)
+    grad_x = grad_y @ W.T
+    return grad_x, grad_W, grad_b
 
 # Step 30 - relu_backward (not yet solved)
 # TODO: implement
