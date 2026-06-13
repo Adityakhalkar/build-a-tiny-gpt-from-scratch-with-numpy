@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Build a Tiny GPT From Scratch with NumPy</title>
+<meta name="description" content="Implement a character-level GPT-style transformer end-to-end using only NumPy: tokenization, embeddings, single-head causal self-attention, transformer blocks, manual backprop, Adam, and text generation. Builds deep intuition for how modern language models actually work under the hood." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #09090b;
+      --surface: #18181b;
+      --border: #27272a;
+      --text: #fafafa;
+      --muted: #a1a1a6;
+      --accent: #fafafa;
+    }
+  }
+  :root {
+    --bg: #ffffff;
+    --surface: #fafafa;
+    --border: #e4e4e7;
+    --text: #18181b;
+    --muted: #71717a;
+    --accent: #18181b;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 48px 24px 96px; }
+  .header { margin-bottom: 48px; }
+  .title-section { margin-bottom: 32px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 12px;
+    font-weight: 500;
+  }
+  h1 {
+    font-family: var(--mono);
+    font-size: 32px;
+    line-height: 1.2;
+    font-weight: 700;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+  .lede { font-size: 16px; color: var(--muted); margin: 0 0 20px; max-width: 65ch; line-height: 1.6; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 16px; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+  }
+  .badge .dot {
+    width: 5px; height: 5px; border-radius: 999px; background: var(--accent);
+  }
+  .section { margin-top: 64px; }
+  .section h2 {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    margin: 0 0 28px;
+  }
+  .part { margin-bottom: 32px; }
+  .part-title {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  ol.steps { list-style: none; margin: 0; padding: 0; }
+  ol.steps li {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text);
+  }
+  ol.steps li:last-child { border-bottom: none; }
+  ol.steps .idx {
+    font-family: var(--mono);
+    color: var(--muted);
+    font-size: 12px;
+    min-width: 24px;
+    flex-shrink: 0;
+  }
+  .code-section {
+    margin-top: 12px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .code-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 12px;
+    font-weight: 500;
+  }
+  pre {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--text);
+  }
+  code { font-family: var(--mono); font-size: 12px; }
+  footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  footer a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); }
+  footer a:hover { border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="header">
+    <div class="title-section">
+      <p class="eyebrow">Deep-ML Project</p>
+      <h1>Build a Tiny GPT From Scratch with NumPy</h1>
+      <p class="lede">Implement a character-level GPT-style transformer end-to-end using only NumPy: tokenization, embeddings, single-head causal self-attention, transformer blocks, manual backprop, Adam, and text generation. Builds deep intuition for how modern language models actually work under the hood.</p>
+      <div class="meta"><span class="badge"><span class="dot"></span>transformer_attention</span><span class="badge">63 steps</span><span class="badge">@Adityakhalkar</span></div>
+    </div>
+  </header>
+  
+  <section class="section"><h2>How it was built</h2><div class="part"><p class="part-title">Tokenizer and Batching</p><ol class="steps"><li><span class="idx">01</span><span>build_char_vocab</span></li><li><span class="idx">02</span><span>encode_text</span></li><li><span class="idx">03</span><span>decode_ids</span></li><li><span class="idx">04</span><span>sample_batch</span></li></ol></div><div class="part"><p class="part-title">Parameter Initialization</p><ol class="steps"><li><span class="idx">01</span><span>init_linear</span></li><li><span class="idx">02</span><span>init_embedding</span></li><li><span class="idx">03</span><span>init_layer_norm</span></li><li><span class="idx">04</span><span>init_attention_params</span></li><li><span class="idx">05</span><span>init_mlp_params</span></li><li><span class="idx">06</span><span>init_transformer_block_params</span></li><li><span class="idx">07</span><span>init_gpt_params</span></li></ol></div><div class="part"><p class="part-title">Forward Primitives</p><ol class="steps"><li><span class="idx">01</span><span>softmax</span></li><li><span class="idx">02</span><span>linear_forward</span></li><li><span class="idx">03</span><span>relu_forward</span></li><li><span class="idx">04</span><span>layer_norm_forward</span></li><li><span class="idx">05</span><span>build_causal_mask</span></li><li><span class="idx">06</span><span>embed_token_ids</span></li><li><span class="idx">07</span><span>get_positional_embedding</span></li></ol></div><div class="part"><p class="part-title">Model Forward Pass</p><ol class="steps"><li><span class="idx">01</span><span>scaled_dot_product_attention</span></li><li><span class="idx">02</span><span>self_attention_forward</span></li><li><span class="idx">03</span><span>mlp_forward</span></li><li><span class="idx">04</span><span>transformer_block_forward</span></li><li><span class="idx">05</span><span>gpt_input_embeddings</span></li><li><span class="idx">06</span><span>gpt_apply_blocks</span></li><li><span class="idx">07</span><span>gpt_final_projection</span></li><li><span class="idx">08</span><span>gpt_forward</span></li></ol></div><div class="part"><p class="part-title">Loss and Backward Pass</p><ol class="steps"><li><span class="idx">01</span><span>cross_entropy_loss</span></li><li><span class="idx">02</span><span>cross_entropy_softmax_backward</span></li><li><span class="idx">03</span><span>linear_backward</span></li><li><span class="idx">04</span><span>relu_backward</span></li><li><span class="idx">05</span><span>layer_norm_grad_beta</span></li><li><span class="idx">06</span><span>layer_norm_grad_gamma</span></li><li><span class="idx">07</span><span>layer_norm_grad_xhat</span></li><li><span class="idx">08</span><span>layer_norm_grad_input</span></li><li><span class="idx">09</span><span>layer_norm_backward</span></li><li><span class="idx">10</span><span>attention_backward_v</span></li><li><span class="idx">11</span><span>attention_backward_weights</span></li><li><span class="idx">12</span><span>softmax_backward</span></li><li><span class="idx">13</span><span>attention_backward_qk</span></li><li><span class="idx">14</span><span>scaled_dot_product_attention_backward</span></li><li><span class="idx">15</span><span>output_projection_backward</span></li><li><span class="idx">16</span><span>qkv_projection_backward</span></li><li><span class="idx">17</span><span>self_attention_backward</span></li><li><span class="idx">18</span><span>mlp_backward</span></li><li><span class="idx">19</span><span>transformer_block_backward_mlp_path</span></li><li><span class="idx">20</span><span>transformer_block_backward_attn_path</span></li><li><span class="idx">21</span><span>transformer_block_backward</span></li><li><span class="idx">22</span><span>embedding_backward</span></li><li><span class="idx">23</span><span>gpt_head_backward</span></li><li><span class="idx">24</span><span>gpt_final_ln_backward</span></li><li><span class="idx">25</span><span>gpt_blocks_backward</span></li><li><span class="idx">26</span><span>gpt_embeddings_backward</span></li><li><span class="idx">27</span><span>gpt_backward</span></li></ol></div><div class="part"><p class="part-title">Training Loop and Generation</p><ol class="steps"><li><span class="idx">01</span><span>init_adam_state</span></li><li><span class="idx">02</span><span>adam_update_array</span></li><li><span class="idx">03</span><span>apply_adam_to_leaf</span></li><li><span class="idx">04</span><span>apply_adam_to_params</span></li><li><span class="idx">05</span><span>train_step</span></li><li><span class="idx">06</span><span>sample_next_token</span></li><li><span class="idx">07</span><span>crop_context</span></li><li><span class="idx">08</span><span>next_token_logits</span></li><li><span class="idx">09</span><span>generate_one_token</span></li><li><span class="idx">10</span><span>generate_text</span></li></ol></div></section>
+  <section class="section"><div class="code-section"><p class="code-label">model.py</p><pre><code># Step 1 - build_char_vocab
+def build_char_vocab(text):
+    chars = sorted(set(text))
+    char_to_id = {c: i for i, c in enumerate(chars)}
+    id_to_char = {i: c for i, c in enumerate(chars)}
+    return char_to_id, id_to_char
+
+# Step 2 - encode_text
+import numpy as np
+
+def encode_text(text, char_to_id):
+    return np.array([char_to_id[c] for c in text], dtype=np.int64)
+
+# Step 3 - decode_ids
+def decode_ids(ids, id_to_char):
+    return &#39;&#39;.join(id_to_char[int(i)] for i in ids)
+
+# Step 4 - sample_batch
+import numpy as np
+
+def sample_batch(data_ids, batch_size, seq_len):
+    data_ids = np.asarray(data_ids)
+    n = len(data_ids)
+    high = n - seq_len
+    ix = np.random.randint(0, high, size=batch_size)
+    x = np.stack([data_ids[i:i + seq_len] for i in ix]).astype(np.int64)
+    y = np.stack([data_ids[i + 1:i + 1 + seq_len] for i in ix]).astype(np.int64)
+    return x, y
+
+# Step 5 - init_linear
+import numpy as np
+
+def init_linear(in_dim, out_dim):
+    std = np.sqrt(1.0 / in_dim)
+    W = np.random.normal(0.0, std, size=(in_dim, out_dim))
+    b = np.zeros((out_dim,))
+    return {&#39;W&#39;: W, &#39;b&#39;: b}
+
+# Step 6 - init_embedding
+import numpy as np
+
+def init_embedding(num_embeddings, dim):
+    return np.random.normal(loc=0.0, scale=0.02, size=(num_embeddings, dim))
+
+# Step 7 - init_layer_norm
+import numpy as np
+
+def init_layer_norm(dim):
+    return {
+        &#39;gamma&#39;: np.ones((dim,), dtype=np.float64),
+        &#39;beta&#39;: np.zeros((dim,), dtype=np.float64),
+    }
+
+# Step 8 - init_attention_params
+def init_attention_params(d_model):
+    return {
+        &#39;q&#39;: init_linear(d_model, d_model),
+        &#39;k&#39;: init_linear(d_model, d_model),
+        &#39;v&#39;: init_linear(d_model, d_model),
+        &#39;o&#39;: init_linear(d_model, d_model),
+    }
+
+# Step 9 - init_mlp_params
+def init_mlp_params(d_model, d_ff):
+    return {
+        &#39;fc1&#39;: init_linear(d_model, d_ff),
+        &#39;fc2&#39;: init_linear(d_ff, d_model),
+    }
+
+# Step 10 - init_transformer_block_params
+def init_transformer_block_params(d_model, d_ff):
+    return {
+        &#39;ln1&#39;: init_layer_norm(d_model),
+        &#39;attn&#39;: init_attention_params(d_model),
+        &#39;ln2&#39;: init_layer_norm(d_model),
+        &#39;mlp&#39;: init_mlp_params(d_model, d_ff),
+    }
+
+# Step 11 - init_gpt_params
+import numpy as np
+
+def init_gpt_params(vocab_size, d_model, n_layers, max_len, d_ff):
+    params = {
+        &#39;tok_emb&#39;: init_embedding(vocab_size, d_model),
+        &#39;pos_emb&#39;: init_embedding(max_len, d_model),
+        &#39;blocks&#39;: [init_transformer_block_params(d_model, d_ff) for _ in range(n_layers)],
+        &#39;ln_f&#39;: init_layer_norm(d_model),
+        &#39;head&#39;: init_linear(d_model, vocab_size),
+    }
+    return params
+
+# Step 12 - softmax
+import numpy as np
+
+def softmax(x, axis=-1):
+    x_max = np.max(x, axis=axis, keepdims=True)
+    e = np.exp(x - x_max)
+    return e / np.sum(e, axis=axis, keepdims=True)
+
+# Step 13 - linear_forward
+import numpy as np
+
+def linear_forward(x, W, b):
+    return x @ W + b
+
+# Step 14 - relu_forward
+import numpy as np
+
+def relu_forward(x):
+    return np.maximum(x, 0)
+
+# Step 15 - layer_norm_forward
+import numpy as np
+
+def layer_norm_forward(x, gamma, beta, eps=1e-5):
+    mean = x.mean(axis=-1, keepdims=True)
+    var = x.var(axis=-1, keepdims=True)
+    inv_std = 1.0 / np.sqrt(var + eps)
+    x_hat = (x - mean) * inv_std
+    out = gamma * x_hat + beta
+    cache = {&#39;x_hat&#39;: x_hat, &#39;mean&#39;: mean, &#39;var&#39;: var, &#39;inv_std&#39;: inv_std, &#39;gamma&#39;: gamma}
+    return out, cache
+
+# Step 16 - build_causal_mask
+import numpy as np
+
+def build_causal_mask(seq_len):
+    return np.triu(np.ones((seq_len, seq_len), dtype=bool), k=1)
+
+# Step 17 - embed_token_ids
+import numpy as np
+
+def embed_token_ids(ids, token_embedding):
+    return token_embedding[ids]
+
+# Step 18 - get_positional_embedding
+import numpy as np
+
+def get_positional_embedding(pos_embedding, seq_len):
+    return pos_embedding[:seq_len]
+
+# Step 19 - scaled_dot_product_attention
+import numpy as np
+
+def scaled_dot_product_attention(Q, K, V, mask):
+    d_k = Q.shape[-1]
+    scale = 1.0 / np.sqrt(d_k)
+    scores = np.matmul(Q, np.swapaxes(K, -1, -2)) * scale
+    if mask is not None:
+        scores = np.where(mask, -1e9, scores)
+    attn = softmax(scores, axis=-1)
+    out = np.matmul(attn, V)
+    cache = {
+        &#39;Q&#39;: Q,
+        &#39;K&#39;: K,
+        &#39;V&#39;: V,
+        &#39;attn_weights&#39;: attn,
+        &#39;scale&#39;: scale,
+        &#39;mask&#39;: mask,
+    }
+    return out, cache
+
+# Step 20 - self_attention_forward
+def self_attention_forward(x, attn_params, mask):
+    q_p = attn_params[&#39;q&#39;]
+    k_p = attn_params[&#39;k&#39;]
+    v_p = attn_params[&#39;v&#39;]
+    o_p = attn_params[&#39;o&#39;]
+    Q = linear_forward(x, q_p[&#39;W&#39;], q_p[&#39;b&#39;])
+    K = linear_forward(x, k_p[&#39;W&#39;], k_p[&#39;b&#39;])
+    V = linear_forward(x, v_p[&#39;W&#39;], v_p[&#39;b&#39;])
+    attn_out, attn_cache = scaled_dot_product_attention(Q, K, V, mask)
+    out = linear_forward(attn_out, o_p[&#39;W&#39;], o_p[&#39;b&#39;])
+    cache = {
+        &#39;x&#39;: x,
+        &#39;Q&#39;: Q,
+        &#39;K&#39;: K,
+        &#39;V&#39;: V,
+        &#39;attn_out&#39;: attn_out,
+        &#39;attn_cache&#39;: attn_cache,
+        &#39;mask&#39;: mask,
+    }
+    return out, cache
+
+# Step 21 - mlp_forward
+def mlp_forward(x, mlp_params):
+    fc1 = mlp_params[&#39;fc1&#39;]
+    fc2 = mlp_params[&#39;fc2&#39;]
+    h_pre = linear_forward(x, fc1[&#39;W&#39;], fc1[&#39;b&#39;])
+    h = relu_forward(h_pre)
+    out = linear_forward(h, fc2[&#39;W&#39;], fc2[&#39;b&#39;])
+    cache = {&#39;x&#39;: x, &#39;h_pre&#39;: h_pre, &#39;h&#39;: h}
+    return out, cache
+
+# Step 22 - transformer_block_forward
+def transformer_block_forward(x, block_params, mask):
+    ln1 = block_params[&#39;ln1&#39;]
+    ln2 = block_params[&#39;ln2&#39;]
+    ln1_out, ln1_cache = layer_norm_forward(x, ln1[&#39;gamma&#39;], ln1[&#39;beta&#39;])
+    attn_out, attn_cache = self_attention_forward(ln1_out, block_params[&#39;attn&#39;], mask)
+    h1 = x + attn_out
+    ln2_out, ln2_cache = layer_norm_forward(h1, ln2[&#39;gamma&#39;], ln2[&#39;beta&#39;])
+    mlp_out, mlp_cache = mlp_forward(ln2_out, block_params[&#39;mlp&#39;])
+    h2 = h1 + mlp_out
+    cache = {
+        &#39;x&#39;: x,
+        &#39;ln1_cache&#39;: ln1_cache,
+        &#39;attn_cache&#39;: attn_cache,
+        &#39;h1&#39;: h1,
+        &#39;ln2_cache&#39;: ln2_cache,
+        &#39;mlp_cache&#39;: mlp_cache,
+    }
+    return h2, cache
+
+# Step 23 - gpt_input_embeddings (not yet solved)
+# TODO: implement
+
+# Step 24 - gpt_apply_blocks (not yet solved)
+# TODO: implement
+
+# Step 25 - gpt_final_projection (not yet solved)
+# TODO: implement
+
+# Step 26 - gpt_forward (not yet solved)
+# TODO: implement
+
+# Step 27 - cross_entropy_loss (not yet solved)
+# TODO: implement
+
+# Step 28 - cross_entropy_softmax_backward (not yet solved)
+# TODO: implement
+
+# Step 29 - linear_backward (not yet solved)
+# TODO: implement
+
+# Step 30 - relu_backward (not yet solved)
+# TODO: implement
+
+# Step 31 - layer_norm_grad_beta (not yet solved)
+# TODO: implement
+
+# Step 32 - layer_norm_grad_gamma (not yet solved)
+# TODO: implement
+
+# Step 33 - layer_norm_grad_xhat (not yet solved)
+# TODO: implement
+
+# Step 34 - layer_norm_grad_input (not yet solved)
+# TODO: implement
+
+# Step 35 - layer_norm_backward (not yet solved)
+# TODO: implement
+
+# Step 36 - attention_backward_v (not yet solved)
+# TODO: implement
+
+# Step 37 - attention_backward_weights (not yet solved)
+# TODO: implement
+
+# Step 38 - softmax_backward (not yet solved)
+# TODO: implement
+
+# Step 39 - attention_backward_qk (not yet solved)
+# TODO: implement
+
+# Step 40 - scaled_dot_product_attention_backward (not yet solved)
+# TODO: implement
+
+# Step 41 - output_projection_backward (not yet solved)
+# TODO: implement
+
+# Step 42 - qkv_projection_backward (not yet solved)
+# TODO: implement
+
+# Step 43 - self_attention_backward (not yet solved)
+# TODO: implement
+
+# Step 44 - mlp_backward (not yet solved)
+# TODO: implement
+
+# Step 45 - transformer_block_backward_mlp_path (not yet solved)
+# TODO: implement
+
+# Step 46 - transformer_block_backward_attn_path (not yet solved)
+# TODO: implement
+
+# Step 47 - transformer_block_backward (not yet solved)
+# TODO: implement
+
+# Step 48 - embedding_backward (not yet solved)
+# TODO: implement
+
+# Step 49 - gpt_head_backward (not yet solved)
+# TODO: implement
+
+# Step 50 - gpt_final_ln_backward (not yet solved)
+# TODO: implement
+
+# Step 51 - gpt_blocks_backward (not yet solved)
+# TODO: implement
+
+# Step 52 - gpt_embeddings_backward (not yet solved)
+# TODO: implement
+
+# Step 53 - gpt_backward (not yet solved)
+# TODO: implement
+
+# Step 54 - init_adam_state (not yet solved)
+# TODO: implement
+
+# Step 55 - adam_update_array (not yet solved)
+# TODO: implement
+
+# Step 56 - apply_adam_to_leaf (not yet solved)
+# TODO: implement
+
+# Step 57 - apply_adam_to_params (not yet solved)
+# TODO: implement
+
+# Step 58 - train_step (not yet solved)
+# TODO: implement
+
+# Step 59 - sample_next_token (not yet solved)
+# TODO: implement
+
+# Step 60 - crop_context (not yet solved)
+# TODO: implement
+
+# Step 61 - next_token_logits (not yet solved)
+# TODO: implement
+
+# Step 62 - generate_one_token (not yet solved)
+# TODO: implement
+
+# Step 63 - generate_text (not yet solved)
+# TODO: implement
+</code></pre></div></section>
+  <footer>
+    <a href="https://deep-ml.com" rel="noopener">Built on Deep-ML</a>.
+  </footer>
+</main>
+</body>
+</html>
