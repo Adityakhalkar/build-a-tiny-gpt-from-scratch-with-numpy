@@ -312,8 +312,17 @@ def layer_norm_grad_beta(grad_y):
     D = grad_y.shape[-1]
     return grad_y.reshape(-1, D).sum(axis=0)
 
-# Step 32 - layer_norm_grad_gamma (not yet solved)
-# TODO: implement
+# Step 32 - layer_norm_grad_gamma
+import numpy as np
+
+def layer_norm_grad_gamma(grad_y, x_hat):
+    grad_y = np.asarray(grad_y, dtype=float)
+    x_hat = np.asarray(x_hat, dtype=float)
+    prod = grad_y * x_hat
+    if prod.ndim == 1:
+        return prod
+    axes = tuple(range(prod.ndim - 1))
+    return prod.sum(axis=axes)
 
 # Step 33 - layer_norm_grad_xhat (not yet solved)
 # TODO: implement

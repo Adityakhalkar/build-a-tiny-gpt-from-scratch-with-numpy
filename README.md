@@ -41,7 +41,7 @@ python scaffold.py
 - [x] **29.** linear_backward
 - [x] **30.** relu_backward
 - [x] **31.** layer_norm_grad_beta
-- [ ] **32.** layer_norm_grad_gamma
+- [x] **32.** layer_norm_grad_gamma
 - [ ] **33.** layer_norm_grad_xhat
 - [ ] **34.** layer_norm_grad_input
 - [ ] **35.** layer_norm_backward
