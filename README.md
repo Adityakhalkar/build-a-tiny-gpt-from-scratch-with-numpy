@@ -34,7 +34,7 @@ python scaffold.py
 - [x] **22.** transformer_block_forward
 - [x] **23.** gpt_input_embeddings
 - [x] **24.** gpt_apply_blocks
-- [ ] **25.** gpt_final_projection
+- [x] **25.** gpt_final_projection
 - [ ] **26.** gpt_forward
 - [ ] **27.** cross_entropy_loss
 - [ ] **28.** cross_entropy_softmax_backward

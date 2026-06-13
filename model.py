@@ -236,8 +236,12 @@ def gpt_apply_blocks(x, mask, params):
         block_caches.append(cache)
     return x, block_caches
 
-# Step 25 - gpt_final_projection (not yet solved)
-# TODO: implement
+# Step 25 - gpt_final_projection
+def gpt_final_projection(x, params):
+    x_norm, ln_cache = layer_norm_forward(x, params['ln_f']['gamma'], params['ln_f']['beta'])
+    logits = linear_forward(x_norm, params['head']['W'], params['head']['b'])
+    head_cache = x_norm
+    return logits, ln_cache, head_cache
 
 # Step 26 - gpt_forward (not yet solved)
 # TODO: implement
