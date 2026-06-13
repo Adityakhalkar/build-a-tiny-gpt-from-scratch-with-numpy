@@ -212,13 +212,13 @@
             <div class="part-reveal" style="opacity: 1">
               <h3 class="part-title">Part 1: Tokenizer and Batching</h3>
               <p class="part-description">Build a character-level vocabulary, encode/decode text, and sample training batches of (input, target) sequences.</p>
-              <div class="diagram-container"><img src="https://kroki.io/pikchr/svg/CiAgICBib3ggIlRleHQgSW5wdXQiIHdpZHRoIDEuMgogICAgYXJyb3cKICAgIGJveCAiU3BsaXQgaW50b1xuQ2hhcmFjdGVycyIgd2lkdGggMS4yCiAgICBhcnJvdwogICAgYm94ICJNYXAgdG8gSURzIiB3aWR0aCAxLjIKICAgIGFycm93CiAgICBib3ggIlRva2VuIElEc1xuWzEwNCwxMDEsMTA4Li4uXSIgd2lkdGggMS41CiAg" alt="diagram" style="max-width: 100%; height: auto;"></div>
+              <div class="diagram-container"><img src="https://kroki.io/pikchr/svg/box%20%22Text%20Input%22%20width%201.2%0A%20%20%20%20arrow%0A%20%20%20%20box%20%22Split%20into%5CnCharacters%22%20width%201.2%0A%20%20%20%20arrow%0A%20%20%20%20box%20%22Map%20to%20IDs%22%20width%201.2%0A%20%20%20%20arrow%0A%20%20%20%20box%20%22Token%20IDs%5Cn%5B104%2C101%2C108...%5D%22%20width%201.5" alt="diagram" style="max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: var(--surface);"></div>
             </div>
           
             <div class="part-reveal" style="opacity: 1">
               <h3 class="part-title">Part 2: Parameter Initialization</h3>
               <p class="part-description">Initialize all model parameters (embeddings, linear layers, layer norms, attention, MLP) using small random/Xavier-style init.</p>
-              <div class="diagram-container"><img src="https://kroki.io/pikchr/svg/CiAgICBib3ggIkluaXRpYWxpemUgUGFyYW1ldGVycyIgd2lkdGggMS41CiAgICBtb3ZlIGRvd24gMC41CiAgICBib3ggIkVtYmVkZGluZ3MiIHdpZHRoIDEuMAogICAgYm94ICJBdHRlbnRpb24iIHdpZHRoIDEuMCBhdCAoMiwwKQogICAgYm94ICJNTFAiIHdpZHRoIDEuMCBhdCAoMywwKQogICAgYm94ICJMYXllck5vcm0iIHdpZHRoIDEuMCBhdCAoNCwwKQogICAgbW92ZSB0byAoMC41LCAtMC44KQogICAgdGV4dCAiWGF2aWVyIC8gUmFuZG9tIEluaXQiIGZvbnQgaXRhbGljCiAg" alt="diagram" style="max-width: 100%; height: auto;"></div>
+              <div class="diagram-container"><img src="https://kroki.io/pikchr/svg/box%20%22Initialize%20Parameters%22%20width%201.5%0A%20%20%20%20move%20down%200.5%0A%20%20%20%20box%20%22Embeddings%22%20width%201.0%0A%20%20%20%20box%20%22Attention%22%20width%201.0%20at%20(2%2C0)%0A%20%20%20%20box%20%22MLP%22%20width%201.0%20at%20(3%2C0)%0A%20%20%20%20box%20%22LayerNorm%22%20width%201.0%20at%20(4%2C0)%0A%20%20%20%20move%20to%20(0.5%2C%20-0.8)%0A%20%20%20%20text%20%22Xavier%20%2F%20Random%20Init%22%20font%20italic" alt="diagram" style="max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: var(--surface);"></div>
             </div>
           
             <div class="part-reveal" style="opacity: 1">

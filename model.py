@@ -324,8 +324,11 @@ def layer_norm_grad_gamma(grad_y, x_hat):
     axes = tuple(range(prod.ndim - 1))
     return prod.sum(axis=axes)
 
-# Step 33 - layer_norm_grad_xhat (not yet solved)
-# TODO: implement
+# Step 33 - layer_norm_grad_xhat
+import numpy as np
+
+def layer_norm_grad_xhat(grad_y, gamma):
+    return grad_y * gamma
 
 # Step 34 - layer_norm_grad_input (not yet solved)
 # TODO: implement
