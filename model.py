@@ -228,8 +228,13 @@ def gpt_input_embeddings(ids, params):
     pos = get_positional_embedding(params['pos_embedding'], T)
     return tok + pos
 
-# Step 24 - gpt_apply_blocks (not yet solved)
-# TODO: implement
+# Step 24 - gpt_apply_blocks
+def gpt_apply_blocks(x, mask, params):
+    block_caches = []
+    for block in params['blocks']:
+        x, cache = transformer_block_forward(x, block, mask)
+        block_caches.append(cache)
+    return x, block_caches
 
 # Step 25 - gpt_final_projection (not yet solved)
 # TODO: implement
