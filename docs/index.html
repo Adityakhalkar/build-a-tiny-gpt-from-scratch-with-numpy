@@ -39,7 +39,6 @@
     scroll-behavior: smooth;
   }
 
-  /* Theme toggle */
   .theme-toggle {
     position: fixed;
     top: 24px;
@@ -67,7 +66,6 @@
     stroke-width: 2;
   }
 
-  /* Hero section */
   .hero {
     position: relative;
     min-height: 600px;
@@ -81,8 +79,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background-image:
-      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.05"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.05"/></svg>');
     opacity: 0.3;
     animation: drift 20s ease-in-out infinite;
   }
@@ -94,8 +91,6 @@
     position: relative;
     z-index: 2;
     text-align: center;
-    max-width: 700px;
-    padding: 48px;
     animation: fadeInUp 0.8s ease-out;
   }
   @keyframes fadeInUp {
@@ -106,21 +101,13 @@
     font-family: var(--mono);
     font-size: 48px;
     font-weight: 700;
-    margin: 0 0 16px;
+    margin: 0;
     letter-spacing: -0.02em;
     line-height: 1.2;
   }
-  .hero-lede {
-    font-size: 18px;
-    color: var(--text-muted);
-    margin: 0;
-    line-height: 1.6;
-  }
 
-  /* Main content wrapper */
   .wrap { max-width: 900px; margin: 0 auto; padding: 96px 24px; }
 
-  /* Input section */
   .section {
     scroll-margin-top: 100px;
     animation: fadeIn 0.6s ease-out;
@@ -145,66 +132,6 @@
     padding: 32px;
     margin-bottom: 64px;
   }
-  .input-group {
-    margin-bottom: 20px;
-  }
-  .input-group label {
-    display: block;
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 8px;
-    letter-spacing: 0.05em;
-  }
-  .input-group input,
-  .input-group textarea,
-  .input-group select {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 14px;
-    transition: all 0.2s ease;
-  }
-  .input-group input:focus,
-  .input-group textarea:focus,
-  .input-group select:focus {
-    outline: none;
-    border-color: var(--text);
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
-  }
-  .run-button {
-    width: 100%;
-    padding: 12px 24px;
-    background: var(--accent);
-    color: var(--bg);
-    border: none;
-    border-radius: 8px;
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 20px;
-  }
-  .run-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  }
-  .run-button:active {
-    transform: translateY(0);
-  }
-  .run-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  /* Output section */
   .output-section {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -213,28 +140,8 @@
     margin-bottom: 96px;
     min-height: 100px;
   }
-  .output-error {
-    padding: 16px;
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    border-radius: 8px;
-    color: #dc2626;
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-  }
-  .output-result {
-    font-family: var(--mono);
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--text);
-  }
 
-  /* How it was built */
-  .how-section {
-    margin-bottom: 96px;
-  }
+  .how-section { margin-bottom: 96px; }
   .part-reveal {
     margin-bottom: 48px;
     animation: slideInLeft 0.6s ease-out;
@@ -264,14 +171,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 300px;
+    min-height: 250px;
   }
   .diagram-container svg {
     max-width: 100%;
     height: auto;
+    color: var(--text);
   }
 
-  /* Footer */
   .footer {
     text-align: center;
     padding-top: 48px;
@@ -282,35 +189,14 @@
   .footer a {
     color: var(--text);
     text-decoration: none;
-    transition: color 0.2s ease;
-  }
-  .footer a:hover {
-    color: var(--accent);
-  }
-
-  /* Loading state */
-  .spinner {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid var(--border);
-    border-top-color: var(--text);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin {
-    to { transform: rotate(360deg); }
   }
 </style>
 </head>
 <body>
   <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
-    <svg viewBox="0 0 24 24" id="theme-icon">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-    </svg>
+    <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
   </button>
 
-  <!-- Hero Section -->
   <section class="hero" id="hero">
     <div class="hero-content">
       <h1>Build a Tiny GPT From Scratch with NumPy</h1>
@@ -320,102 +206,53 @@
   <div class="wrap">
     
 
-    
-
-    <!-- How it was built -->
     <section class="section how-section" id="how-section">
       <h2 class="section-title">How it was built</h2>
       
-          <div class="part-reveal" style="opacity: 1">
-            <h3 class="part-title">Part 1: Tokenizer and Batching</h3>
-            <p class="part-description">Build a character-level vocabulary, encode/decode text, and sample training batches of (input, target) sequences.</p>
-            <div class="diagram-container">
-      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <style>
-            .node { fill: none; stroke: currentColor; stroke-width: 2; }
-            .text { font-family: var(--mono); font-size: 12px; fill: currentColor; text-anchor: middle; }
-            .arrow { stroke: currentColor; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
-          </style>
-          <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-            <polygon points="0 0, 10 3, 0 6" fill="currentColor" />
-          </marker>
-        </defs>
-        <text x="50" y="30" class="text">Text</text>
-        <rect x="20" y="40" width="60" height="40" class="node" rx="4"/>
-        <text x="50" y="65" class="text" style="font-size: 10px">hello world</text>
-        <line x1="90" y1="60" x2="130" y2="60" class="arrow"/>
-        <text x="110" y="50" class="text" style="font-size: 10px">split</text>
-        <rect x="150" y="40" width="60" height="40" class="node" rx="4"/>
-        <text x="180" y="65" class="text" style="font-size: 10px">['h','e','l','l','o']</text>
-        <line x1="220" y1="60" x2="260" y2="60" class="arrow"/>
-        <text x="240" y="50" class="text" style="font-size: 10px">map</text>
-        <rect x="280" y="40" width="80" height="40" class="node" rx="4"/>
-        <text x="320" y="65" class="text" style="font-size: 10px">[104, 101, 108, ...]</text>
-        <text x="200" y="150" class="text" style="font-size: 13px; font-weight: bold">Each character → unique ID</text>
-      </svg>
-    </div>
-          </div>
-        
-          <div class="part-reveal" style="opacity: 1">
-            <h3 class="part-title">Part 2: Parameter Initialization</h3>
-            <p class="part-description">Initialize all model parameters (embeddings, linear layers, layer norms, attention, MLP) using small random/Xavier-style init.</p>
-            <div class="diagram-container">
-      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <style>
-            .box { fill: none; stroke: currentColor; stroke-width: 1.5; }
-            .text { font-family: var(--mono); font-size: 11px; fill: currentColor; text-anchor: middle; }
-          </style>
-        </defs>
-        <text x="200" y="25" class="text" style="font-weight: bold; font-size: 13px">Model Initialization</text>
-        <rect x="20" y="50" width="70" height="40" class="box" rx="3"/>
-        <text x="55" y="75" class="text" style="font-size: 10px">Embeddings</text>
-        <rect x="110" y="50" width="70" height="40" class="box" rx="3"/>
-        <text x="145" y="75" class="text" style="font-size: 10px">Attention</text>
-        <rect x="200" y="50" width="70" height="40" class="box" rx="3"/>
-        <text x="235" y="75" class="text" style="font-size: 10px">MLP</text>
-        <rect x="290" y="50" width="70" height="40" class="box" rx="3"/>
-        <text x="325" y="75" class="text" style="font-size: 10px">LayerNorm</text>
-        <text x="200" y="150" class="text" style="font-size: 11px; font-weight: bold">Xavier/Random initialization</text>
-      </svg>
-    </div>
-          </div>
-        
-          <div class="part-reveal" style="opacity: 1">
-            <h3 class="part-title">Part 3: Forward Primitives</h3>
-            <p class="part-description">Implement reusable forward ops: softmax, linear, ReLU, layer norm, causal mask, embedding lookup.</p>
-            
-          </div>
-        
-          <div class="part-reveal" style="opacity: 1">
-            <h3 class="part-title">Part 4: Model Forward Pass</h3>
-            <p class="part-description">Compose primitives into self-attention, MLP, transformer blocks, and a full GPT forward pass producing logits.</p>
-            
-          </div>
-        
-          <div class="part-reveal" style="opacity: 1">
-            <h3 class="part-title">Part 5: Loss and Backward Pass</h3>
-            <p class="part-description">Cross-entropy loss and manual backprop through every layer of the model, accumulating parameter gradients.</p>
-            
-          </div>
-        
-          <div class="part-reveal" style="opacity: 0.6">
-            <h3 class="part-title">Part 6: Training Loop and Generation</h3>
-            <p class="part-description">Adam optimizer, training step, and autoregressive text generation with temperature sampling.</p>
-            
-          </div>
-        
+            <div class="part-reveal" style="opacity: 1">
+              <h3 class="part-title">Part 1: Tokenizer and Batching</h3>
+              <p class="part-description">Build a character-level vocabulary, encode/decode text, and sample training batches of (input, target) sequences.</p>
+              <div class="diagram-container">[object Promise]</div>
+            </div>
+          
+            <div class="part-reveal" style="opacity: 1">
+              <h3 class="part-title">Part 2: Parameter Initialization</h3>
+              <p class="part-description">Initialize all model parameters (embeddings, linear layers, layer norms, attention, MLP) using small random/Xavier-style init.</p>
+              <div class="diagram-container">[object Promise]</div>
+            </div>
+          
+            <div class="part-reveal" style="opacity: 1">
+              <h3 class="part-title">Part 3: Forward Primitives</h3>
+              <p class="part-description">Implement reusable forward ops: softmax, linear, ReLU, layer norm, causal mask, embedding lookup.</p>
+              
+            </div>
+          
+            <div class="part-reveal" style="opacity: 1">
+              <h3 class="part-title">Part 4: Model Forward Pass</h3>
+              <p class="part-description">Compose primitives into self-attention, MLP, transformer blocks, and a full GPT forward pass producing logits.</p>
+              
+            </div>
+          
+            <div class="part-reveal" style="opacity: 1">
+              <h3 class="part-title">Part 5: Loss and Backward Pass</h3>
+              <p class="part-description">Cross-entropy loss and manual backprop through every layer of the model, accumulating parameter gradients.</p>
+              
+            </div>
+          
+            <div class="part-reveal" style="opacity: 0.6">
+              <h3 class="part-title">Part 6: Training Loop and Generation</h3>
+              <p class="part-description">Adam optimizer, training step, and autoregressive text generation with temperature sampling.</p>
+              
+            </div>
+          
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
       <p>Built by <strong>@Adityakhalkar</strong> on <a href="https://deep-ml.com" target="_blank">Deep-ML</a></p>
     </footer>
   </div>
 
   <script>
-    // Theme toggle
     function toggleTheme() {
       const html = document.documentElement;
       const isDark = html.style.colorScheme === 'dark';
@@ -429,8 +266,6 @@
       document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
     }
     initTheme();
-
-    // Auto-scroll to output
     window.scrollToOutput = function() {
       const output = document.getElementById('output-section');
       output?.scrollIntoView({ behavior: 'smooth', block: 'start' });

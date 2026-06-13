@@ -298,8 +298,11 @@ def linear_backward(grad_y, x, W):
     grad_x = grad_y @ W.T
     return grad_x, grad_W, grad_b
 
-# Step 30 - relu_backward (not yet solved)
-# TODO: implement
+# Step 30 - relu_backward
+import numpy as np
+
+def relu_backward(grad_y, x):
+    return grad_y * (x > 0)
 
 # Step 31 - layer_norm_grad_beta (not yet solved)
 # TODO: implement

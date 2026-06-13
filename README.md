@@ -39,7 +39,7 @@ python scaffold.py
 - [x] **27.** cross_entropy_loss
 - [x] **28.** cross_entropy_softmax_backward
 - [x] **29.** linear_backward
-- [ ] **30.** relu_backward
+- [x] **30.** relu_backward
 - [ ] **31.** layer_norm_grad_beta
 - [ ] **32.** layer_norm_grad_gamma
 - [ ] **33.** layer_norm_grad_xhat
