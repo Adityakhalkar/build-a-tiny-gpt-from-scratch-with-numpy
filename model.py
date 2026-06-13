@@ -260,8 +260,18 @@ def gpt_forward(ids, params):
     }
     return logits, cache
 
-# Step 27 - cross_entropy_loss (not yet solved)
-# TODO: implement
+# Step 27 - cross_entropy_loss
+import numpy as np
+
+def cross_entropy_loss(logits, targets):
+    probs = softmax(logits, axis=-1)
+    B, T, V = logits.shape
+    flat_probs = probs.reshape(B * T, V)
+    flat_targets = targets.reshape(B * T).astype(np.int64)
+    target_probs = flat_probs[np.arange(B * T), flat_targets]
+    target_probs = np.clip(target_probs, 1e-12, 1.0)
+    loss = float(-np.mean(np.log(target_probs)) + 0.0)
+    return loss, probs
 
 # Step 28 - cross_entropy_softmax_backward (not yet solved)
 # TODO: implement

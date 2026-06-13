@@ -318,13 +318,7 @@
   </section>
 
   <div class="wrap">
-    <!-- Input Section -->
-    <section class="section" id="input-section">
-      <h2 class="section-title">Try it</h2>
-      <div class="input-section">
-        <p style="color: var(--text-muted); margin: 0;">Interactive demo coming soon. See "How it was built" below for the architecture.</p>
-      </div>
-    </section>
+    
 
     
 
@@ -332,42 +326,42 @@
     <section class="section how-section" id="how-section">
       <h2 class="section-title">How it was built</h2>
       
-        <div class="part-reveal" style="opacity: 1">
-          <h3 class="part-title">Part 1: Tokenizer and Batching</h3>
-          <p class="part-description">Build a character-level vocabulary, encode/decode text, and sample training batches of (input, target) sequences.</p>
-          
-        </div>
-      
-        <div class="part-reveal" style="opacity: 1">
-          <h3 class="part-title">Part 2: Parameter Initialization</h3>
-          <p class="part-description">Initialize all model parameters (embeddings, linear layers, layer norms, attention, MLP) using small random/Xavier-style init.</p>
-          
-        </div>
-      
-        <div class="part-reveal" style="opacity: 1">
-          <h3 class="part-title">Part 3: Forward Primitives</h3>
-          <p class="part-description">Implement reusable forward ops: softmax, linear, ReLU, layer norm, causal mask, embedding lookup.</p>
-          
-        </div>
-      
-        <div class="part-reveal" style="opacity: 1">
-          <h3 class="part-title">Part 4: Model Forward Pass</h3>
-          <p class="part-description">Compose primitives into self-attention, MLP, transformer blocks, and a full GPT forward pass producing logits.</p>
-          
-        </div>
-      
-        <div class="part-reveal" style="opacity: 0.6">
-          <h3 class="part-title">Part 5: Loss and Backward Pass</h3>
-          <p class="part-description">Cross-entropy loss and manual backprop through every layer of the model, accumulating parameter gradients.</p>
-          
-        </div>
-      
-        <div class="part-reveal" style="opacity: 0.6">
-          <h3 class="part-title">Part 6: Training Loop and Generation</h3>
-          <p class="part-description">Adam optimizer, training step, and autoregressive text generation with temperature sampling.</p>
-          
-        </div>
-      
+          <div class="part-reveal" style="opacity: 1">
+            <h3 class="part-title">Part 1: Tokenizer and Batching</h3>
+            <p class="part-description">Build a character-level vocabulary, encode/decode text, and sample training batches of (input, target) sequences.</p>
+            
+          </div>
+        
+          <div class="part-reveal" style="opacity: 1">
+            <h3 class="part-title">Part 2: Parameter Initialization</h3>
+            <p class="part-description">Initialize all model parameters (embeddings, linear layers, layer norms, attention, MLP) using small random/Xavier-style init.</p>
+            
+          </div>
+        
+          <div class="part-reveal" style="opacity: 1">
+            <h3 class="part-title">Part 3: Forward Primitives</h3>
+            <p class="part-description">Implement reusable forward ops: softmax, linear, ReLU, layer norm, causal mask, embedding lookup.</p>
+            
+          </div>
+        
+          <div class="part-reveal" style="opacity: 1">
+            <h3 class="part-title">Part 4: Model Forward Pass</h3>
+            <p class="part-description">Compose primitives into self-attention, MLP, transformer blocks, and a full GPT forward pass producing logits.</p>
+            
+          </div>
+        
+          <div class="part-reveal" style="opacity: 1">
+            <h3 class="part-title">Part 5: Loss and Backward Pass</h3>
+            <p class="part-description">Cross-entropy loss and manual backprop through every layer of the model, accumulating parameter gradients.</p>
+            
+          </div>
+        
+          <div class="part-reveal" style="opacity: 0.6">
+            <h3 class="part-title">Part 6: Training Loop and Generation</h3>
+            <p class="part-description">Adam optimizer, training step, and autoregressive text generation with temperature sampling.</p>
+            
+          </div>
+        
     </section>
 
     <!-- Footer -->
