@@ -304,8 +304,13 @@ import numpy as np
 def relu_backward(grad_y, x):
     return grad_y * (x > 0)
 
-# Step 31 - layer_norm_grad_beta (not yet solved)
-# TODO: implement
+# Step 31 - layer_norm_grad_beta
+import numpy as np
+
+def layer_norm_grad_beta(grad_y):
+    grad_y = np.asarray(grad_y)
+    D = grad_y.shape[-1]
+    return grad_y.reshape(-1, D).sum(axis=0)
 
 # Step 32 - layer_norm_grad_gamma (not yet solved)
 # TODO: implement
