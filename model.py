@@ -338,11 +338,25 @@ def layer_norm_grad_input(grad_xhat, x_hat, inv_std):
     mean_gx = np.mean(grad_xhat * x_hat, axis=-1, keepdims=True)
     return inv_std * (grad_xhat - mean_g - x_hat * mean_gx)
 
-# Step 35 - layer_norm_backward (not yet solved)
-# TODO: implement
+# Step 35 - layer_norm_backward
+import numpy as np
 
-# Step 36 - attention_backward_v (not yet solved)
-# TODO: implement
+def layer_norm_backward(grad_y, cache):
+    x_hat = cache['x_hat']
+    inv_std = cache['inv_std']
+    gamma = cache['gamma']
+    grad_y = np.asarray(grad_y, dtype=float)
+    grad_beta = layer_norm_grad_beta(grad_y)
+    grad_gamma = layer_norm_grad_gamma(grad_y, x_hat)
+    grad_xhat = layer_norm_grad_xhat(grad_y, gamma)
+    grad_x = layer_norm_grad_input(grad_xhat, x_hat, inv_std)
+    return grad_x, grad_gamma, grad_beta
+
+# Step 36 - attention_backward_v
+import numpy as np
+
+def attention_backward_v(grad_out, attn_weights):
+    return np.matmul(np.swapaxes(attn_weights, -1, -2), grad_out)
 
 # Step 37 - attention_backward_weights (not yet solved)
 # TODO: implement
