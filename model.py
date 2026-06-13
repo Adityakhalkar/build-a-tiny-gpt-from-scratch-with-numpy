@@ -330,8 +330,13 @@ import numpy as np
 def layer_norm_grad_xhat(grad_y, gamma):
     return grad_y * gamma
 
-# Step 34 - layer_norm_grad_input (not yet solved)
-# TODO: implement
+# Step 34 - layer_norm_grad_input
+import numpy as np
+
+def layer_norm_grad_input(grad_xhat, x_hat, inv_std):
+    mean_g = np.mean(grad_xhat, axis=-1, keepdims=True)
+    mean_gx = np.mean(grad_xhat * x_hat, axis=-1, keepdims=True)
+    return inv_std * (grad_xhat - mean_g - x_hat * mean_gx)
 
 # Step 35 - layer_norm_backward (not yet solved)
 # TODO: implement

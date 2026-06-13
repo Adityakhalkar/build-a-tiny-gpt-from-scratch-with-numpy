@@ -43,7 +43,7 @@ python scaffold.py
 - [x] **31.** layer_norm_grad_beta
 - [x] **32.** layer_norm_grad_gamma
 - [x] **33.** layer_norm_grad_xhat
-- [ ] **34.** layer_norm_grad_input
+- [x] **34.** layer_norm_grad_input
 - [ ] **35.** layer_norm_backward
 - [ ] **36.** attention_backward_v
 - [ ] **37.** attention_backward_weights
