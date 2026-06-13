@@ -243,8 +243,22 @@ def gpt_final_projection(x, params):
     head_cache = x_norm
     return logits, ln_cache, head_cache
 
-# Step 26 - gpt_forward (not yet solved)
-# TODO: implement
+# Step 26 - gpt_forward
+def gpt_forward(ids, params):
+    import numpy as np
+    T = ids.shape[1]
+    tok = embed_token_ids(ids, params['tok_emb'])
+    pos = get_positional_embedding(params['pos_emb'], T)
+    x = tok + pos
+    mask = build_causal_mask(T)
+    x, block_caches = gpt_apply_blocks(x, mask, params)
+    logits, ln_cache, head_cache = gpt_final_projection(x, params)
+    cache = {
+        'ids': ids,
+        'block_caches': block_caches,
+        'final_cache': {'ln_cache': ln_cache, 'head_cache': head_cache},
+    }
+    return logits, cache
 
 # Step 27 - cross_entropy_loss (not yet solved)
 # TODO: implement
