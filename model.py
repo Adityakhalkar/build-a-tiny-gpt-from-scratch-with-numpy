@@ -220,8 +220,13 @@ def transformer_block_forward(x, block_params, mask):
     }
     return h2, cache
 
-# Step 23 - gpt_input_embeddings (not yet solved)
-# TODO: implement
+# Step 23 - gpt_input_embeddings
+def gpt_input_embeddings(ids, params):
+    import numpy as np
+    tok = embed_token_ids(ids, params['token_embedding'])
+    T = ids.shape[1]
+    pos = get_positional_embedding(params['pos_embedding'], T)
+    return tok + pos
 
 # Step 24 - gpt_apply_blocks (not yet solved)
 # TODO: implement
