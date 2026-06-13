@@ -358,8 +358,11 @@ import numpy as np
 def attention_backward_v(grad_out, attn_weights):
     return np.matmul(np.swapaxes(attn_weights, -1, -2), grad_out)
 
-# Step 37 - attention_backward_weights (not yet solved)
-# TODO: implement
+# Step 37 - attention_backward_weights
+import numpy as np
+
+def attention_backward_weights(grad_out, V):
+    return grad_out @ V.transpose(0, 2, 1)
 
 # Step 38 - softmax_backward (not yet solved)
 # TODO: implement

@@ -212,13 +212,49 @@
             <div class="part-reveal" style="opacity: 1">
               <h3 class="part-title">Part 1: Tokenizer and Batching</h3>
               <p class="part-description">Build a character-level vocabulary, encode/decode text, and sample training batches of (input, target) sequences.</p>
-              <div class="diagram-container"><img src="https://kroki.io/pikchr/svg/Ym94ICJUZXh0IElucHV0IiB3aWR0aCAxLjIKYXJyb3cKYm94ICJTcGxpdCBpbnRvIiAiQ2hhcmFjdGVycyIgd2lkdGggMS4yCmFycm93CmJveCAiTWFwIHRvIElEcyIgd2lkdGggMS4yCmFycm93CmJveCAiVG9rZW4gSURzIiB3aWR0aCAxLjU=" alt="diagram" style="max-width: 100%; height: auto;"></div>
+              <div class="diagram-container"><svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
+      <style>
+        .box { fill: none; stroke: currentColor; stroke-width: 2; }
+        .text { font-family: monospace; font-size: 12px; fill: currentColor; text-anchor: middle; }
+        .arrow { stroke: currentColor; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+      </style>
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <polygon points="0 0, 10 3, 0 6" fill="currentColor" />
+        </marker>
+      </defs>
+      <rect x="20" y="40" width="60" height="40" class="box" rx="4"/>
+      <text x="50" y="65" class="text" style="font-size: 11px">Text</text>
+      <path d="M 80 60 L 110 60" class="arrow"/>
+      <rect x="110" y="40" width="60" height="40" class="box" rx="4"/>
+      <text x="140" y="65" class="text" style="font-size: 11px">Split</text>
+      <path d="M 170 60 L 200 60" class="arrow"/>
+      <rect x="200" y="40" width="60" height="40" class="box" rx="4"/>
+      <text x="230" y="65" class="text" style="font-size: 11px">Map</text>
+      <path d="M 260 60 L 290 60" class="arrow"/>
+      <rect x="290" y="40" width="80" height="40" class="box" rx="4"/>
+      <text x="330" y="65" class="text" style="font-size: 10px">Token IDs</text>
+    </svg></div>
             </div>
           
             <div class="part-reveal" style="opacity: 1">
               <h3 class="part-title">Part 2: Parameter Initialization</h3>
               <p class="part-description">Initialize all model parameters (embeddings, linear layers, layer norms, attention, MLP) using small random/Xavier-style init.</p>
-              <div class="diagram-container"><img src="https://kroki.io/pikchr/svg/Ym94ICJJbml0aWFsaXplIiAiUGFyYW1ldGVycyIgd2lkdGggMS41CmJveCAiRW1iZWRkaW5ncyIgd2lkdGggMS4wCmJveCAiQXR0ZW50aW9uIiB3aWR0aCAxLjAgYXQgKDIsMCkKYm94ICJNTFAiIHdpZHRoIDEuMCBhdCAoMywwKQpib3ggIkxheWVyTm9ybSIgd2lkdGggMS4wIGF0ICg0LDAp" alt="diagram" style="max-width: 100%; height: auto;"></div>
+              <div class="diagram-container"><svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
+      <style>
+        .box { fill: none; stroke: currentColor; stroke-width: 1.5; }
+        .text { font-family: monospace; font-size: 11px; fill: currentColor; text-anchor: middle; }
+      </style>
+      <rect x="30" y="30" width="70" height="35" class="box" rx="3"/>
+      <text x="65" y="50" class="text">Embed</text>
+      <rect x="120" y="30" width="70" height="35" class="box" rx="3"/>
+      <text x="155" y="50" class="text">Attn</text>
+      <rect x="210" y="30" width="70" height="35" class="box" rx="3"/>
+      <text x="245" y="50" class="text">MLP</text>
+      <rect x="300" y="30" width="70" height="35" class="box" rx="3"/>
+      <text x="335" y="50" class="text">Norm</text>
+      <text x="200" y="100" class="text" style="font-size: 10px">Initialize all parameters</text>
+    </svg></div>
             </div>
           
             <div class="part-reveal" style="opacity: 1">
