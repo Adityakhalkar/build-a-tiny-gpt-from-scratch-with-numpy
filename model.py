@@ -364,8 +364,13 @@ import numpy as np
 def attention_backward_weights(grad_out, V):
     return grad_out @ V.transpose(0, 2, 1)
 
-# Step 38 - softmax_backward (not yet solved)
-# TODO: implement
+# Step 38 - softmax_backward
+import numpy as np
+
+def softmax_backward(grad_attn, attn_weights):
+    dot = np.sum(grad_attn * attn_weights, axis=-1, keepdims=True)
+    grad_scores = attn_weights * (grad_attn - dot)
+    return grad_scores
 
 # Step 39 - attention_backward_qk (not yet solved)
 # TODO: implement
