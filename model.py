@@ -394,8 +394,14 @@ def scaled_dot_product_attention_backward(grad_out, cache):
     grad_Q, grad_K = attention_backward_qk(grad_scores, Q, K, scale)
     return grad_Q, grad_K, grad_V
 
-# Step 41 - output_projection_backward (not yet solved)
-# TODO: implement
+# Step 41 - output_projection_backward
+import numpy as np
+
+def output_projection_backward(grad_out, cache, attn_params):
+    attn_out = cache['attn_out']
+    W_o = attn_params['o']['W']
+    grad_attn_out, grad_Wo, grad_bo = linear_backward(grad_out, attn_out, W_o)
+    return grad_attn_out, grad_Wo, grad_bo
 
 # Step 42 - qkv_projection_backward (not yet solved)
 # TODO: implement

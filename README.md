@@ -50,7 +50,7 @@ python scaffold.py
 - [x] **38.** softmax_backward
 - [x] **39.** attention_backward_qk
 - [x] **40.** scaled_dot_product_attention_backward
-- [ ] **41.** output_projection_backward
+- [x] **41.** output_projection_backward
 - [ ] **42.** qkv_projection_backward
 - [ ] **43.** self_attention_backward
 - [ ] **44.** mlp_backward
