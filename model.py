@@ -403,8 +403,21 @@ def output_projection_backward(grad_out, cache, attn_params):
     grad_attn_out, grad_Wo, grad_bo = linear_backward(grad_out, attn_out, W_o)
     return grad_attn_out, grad_Wo, grad_bo
 
-# Step 42 - qkv_projection_backward (not yet solved)
-# TODO: implement
+# Step 42 - qkv_projection_backward
+import numpy as np
+
+def qkv_projection_backward(grad_Q, grad_K, grad_V, cache, attn_params):
+    x = cache['x']
+    grad_x_q, grad_W_q, grad_b_q = linear_backward(grad_Q, x, attn_params['q']['W'])
+    grad_x_k, grad_W_k, grad_b_k = linear_backward(grad_K, x, attn_params['k']['W'])
+    grad_x_v, grad_W_v, grad_b_v = linear_backward(grad_V, x, attn_params['v']['W'])
+    grad_x = grad_x_q + grad_x_k + grad_x_v
+    grads = {
+        'q': {'W': grad_W_q, 'b': grad_b_q},
+        'k': {'W': grad_W_k, 'b': grad_b_k},
+        'v': {'W': grad_W_v, 'b': grad_b_v},
+    }
+    return grad_x, grads
 
 # Step 43 - self_attention_backward (not yet solved)
 # TODO: implement
