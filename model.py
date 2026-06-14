@@ -419,11 +419,39 @@ def qkv_projection_backward(grad_Q, grad_K, grad_V, cache, attn_params):
     }
     return grad_x, grads
 
-# Step 43 - self_attention_backward (not yet solved)
-# TODO: implement
+# Step 43 - self_attention_backward
+def self_attention_backward(grad_out, cache, attn_params):
+    grad_attn_out, grad_Wo, grad_bo = output_projection_backward(
+        grad_out, cache, attn_params
+    )
+    grad_Q, grad_K, grad_V = scaled_dot_product_attention_backward(
+        grad_attn_out, cache['attn_cache']
+    )
+    grad_x, qkv_grads = qkv_projection_backward(
+        grad_Q, grad_K, grad_V, cache, attn_params
+    )
+    grads = {**qkv_grads, 'o': {'W': grad_Wo, 'b': grad_bo}}
+    return grad_x, grads
 
-# Step 44 - mlp_backward (not yet solved)
-# TODO: implement
+# Step 44 - mlp_backward
+import numpy as np
+
+def mlp_backward(grad_out, cache, mlp_params):
+    x = cache['x']
+    h_pre = cache['h_pre']
+    h = cache['h']
+    fc1 = mlp_params['fc1']
+    fc2 = mlp_params['fc2']
+
+    grad_h, grad_W2, grad_b2 = linear_backward(grad_out, h, fc2['W'])
+    grad_h_pre = relu_backward(grad_h, h_pre)
+    grad_x, grad_W1, grad_b1 = linear_backward(grad_h_pre, x, fc1['W'])
+
+    grads = {
+        'fc1': {'W': grad_W1, 'b': grad_b1},
+        'fc2': {'W': grad_W2, 'b': grad_b2},
+    }
+    return grad_x, grads
 
 # Step 45 - transformer_block_backward_mlp_path (not yet solved)
 # TODO: implement

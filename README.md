@@ -52,8 +52,8 @@ python scaffold.py
 - [x] **40.** scaled_dot_product_attention_backward
 - [x] **41.** output_projection_backward
 - [x] **42.** qkv_projection_backward
-- [ ] **43.** self_attention_backward
-- [ ] **44.** mlp_backward
+- [x] **43.** self_attention_backward
+- [x] **44.** mlp_backward
 - [ ] **45.** transformer_block_backward_mlp_path
 - [ ] **46.** transformer_block_backward_attn_path
 - [ ] **47.** transformer_block_backward
