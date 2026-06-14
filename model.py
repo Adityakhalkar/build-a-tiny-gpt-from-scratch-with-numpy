@@ -372,8 +372,14 @@ def softmax_backward(grad_attn, attn_weights):
     grad_scores = attn_weights * (grad_attn - dot)
     return grad_scores
 
-# Step 39 - attention_backward_qk (not yet solved)
-# TODO: implement
+# Step 39 - attention_backward_qk
+import numpy as np
+
+def attention_backward_qk(grad_scores, Q, K, scale):
+    grad_qkT = grad_scores * scale
+    grad_Q = np.matmul(grad_qkT, K)
+    grad_K = np.matmul(grad_qkT.swapaxes(-1, -2), Q)
+    return grad_Q, grad_K
 
 # Step 40 - scaled_dot_product_attention_backward (not yet solved)
 # TODO: implement

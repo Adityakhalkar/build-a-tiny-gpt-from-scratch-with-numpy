@@ -48,7 +48,7 @@ python scaffold.py
 - [x] **36.** attention_backward_v
 - [x] **37.** attention_backward_weights
 - [x] **38.** softmax_backward
-- [ ] **39.** attention_backward_qk
+- [x] **39.** attention_backward_qk
 - [ ] **40.** scaled_dot_product_attention_backward
 - [ ] **41.** output_projection_backward
 - [ ] **42.** qkv_projection_backward
