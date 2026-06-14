@@ -381,8 +381,18 @@ def attention_backward_qk(grad_scores, Q, K, scale):
     grad_K = np.matmul(grad_qkT.swapaxes(-1, -2), Q)
     return grad_Q, grad_K
 
-# Step 40 - scaled_dot_product_attention_backward (not yet solved)
-# TODO: implement
+# Step 40 - scaled_dot_product_attention_backward
+def scaled_dot_product_attention_backward(grad_out, cache):
+    Q = cache['Q']
+    K = cache['K']
+    V = cache['V']
+    attn_weights = cache['attn_weights']
+    scale = cache['scale']
+    grad_V = attention_backward_v(grad_out, attn_weights)
+    grad_attn = attention_backward_weights(grad_out, V)
+    grad_scores = softmax_backward(grad_attn, attn_weights)
+    grad_Q, grad_K = attention_backward_qk(grad_scores, Q, K, scale)
+    return grad_Q, grad_K, grad_V
 
 # Step 41 - output_projection_backward (not yet solved)
 # TODO: implement
